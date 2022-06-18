@@ -1,5 +1,6 @@
 package com.download;
 
+import com.NewsRun;
 import com.parser.PageParser;
 import com.utils.NewsStore;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +34,10 @@ public class ChromeDownLoad {
   public void getPage() {
     WebDriver webDriver = getWebDriver();
     try {
+      System.out.println(String.format("开始下载页面: %s",url));
       webDriver.get(url);
+      System.out.println(String.format("下载成功: %s",url));
       String pageSource = webDriver.getPageSource();
-//      System.out.println(pageSource);
       int size = pageParser.parserHtml(pageSource);
       if (size == 0){
         NewsStore.doNotifyError("请求错误,页面加载失败!url:"+url);
@@ -55,11 +57,14 @@ public class ChromeDownLoad {
     String osName = System.getProperty("os.name");
     logger.info("当前系统类型，{}",osName);
     ClassLoader classLoader = this.getClass().getClassLoader();
-    String linuxDriverPath = classLoader.getResource("driver/chromedriver").getPath();
-    String winDriverPath = classLoader.getResource("driver/chromedriver.exe").getPath();
-    String linuxChromePath = classLoader.getResource("driver/google-chrome-stable_current_amd64_71.0.3578.80.deb").getPath();
+    String path = new NewsRun().getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+    String[] pathSplit = path.split("/");
+    String jarName = pathSplit[pathSplit.length - 1];
+    String jarPath = path.replace(jarName, "");
+    String linuxDriverPath = jarPath+"driver/chromedriver";
+    String winDriverPath = jarPath+"driver/chromedriver.exe";
+    String linuxChromePath = jarPath+"driver/google-chrome-stable_current_amd64_71.0.3578.80.deb";
     System.out.println(linuxDriverPath);
-    System.out.println(linuxChromePath);
     ChromeOptions chromeOptions = new ChromeOptions();
     if (osName.toUpperCase().indexOf("WIN") > -1){
       System.setProperty("webdriver.chrome.driver", winDriverPath);
@@ -84,9 +89,9 @@ public class ChromeDownLoad {
     webDriver.manage().window().setSize(dimension);
     Point p = new Point(100,0);
     webDriver.manage().window().setPosition(p);
-    webDriver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-    webDriver.manage().timeouts().setScriptTimeout(20,TimeUnit.SECONDS);
-    webDriver.manage().timeouts().implicitlyWait(20,TimeUnit.SECONDS);
+    webDriver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+    webDriver.manage().timeouts().setScriptTimeout(5,TimeUnit.SECONDS);
+    webDriver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
     return webDriver;
   }
 

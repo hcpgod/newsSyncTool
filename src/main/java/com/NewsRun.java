@@ -40,8 +40,8 @@ public class NewsRun {
     PageParser hooParser = new HooParser();
     PageParser binnanceParser = new BinnanceParser();
     PageParser mexcParser = new MexcParser();
-//    downList.add(new ChromeDownLoad(hooParser.getUrl(),hooParser));
-//    downList.add(new ChromeDownLoad(binnanceParser.getUrl(),binnanceParser));
+    downList.add(new ChromeDownLoad(hooParser.getUrl(),hooParser));
+    downList.add(new ChromeDownLoad(binnanceParser.getUrl(),binnanceParser));
     downList.add(new ChromeDownLoad(mexcParser.getUrl(),mexcParser));
     return downList;
   }
