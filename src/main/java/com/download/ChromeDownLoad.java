@@ -3,6 +3,8 @@ package com.download;
 import com.NewsRun;
 import com.parser.PageParser;
 import com.utils.NewsStore;
+
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import com.utils.UserAgentUtil;
@@ -21,6 +23,8 @@ import org.slf4j.LoggerFactory;
 @RequiredArgsConstructor
 public class ChromeDownLoad {
   public static Logger logger = LoggerFactory.getLogger(ChromeDownLoad.class);
+
+  public final Properties properties;
 
   private final String url;
 
@@ -56,15 +60,10 @@ public class ChromeDownLoad {
     String userAgent = String.format("User-Agent=%s", user_agent);
     String osName = System.getProperty("os.name");
     logger.info("当前系统类型，{}",osName);
-    ClassLoader classLoader = this.getClass().getClassLoader();
-    String path = new NewsRun().getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-    String[] pathSplit = path.split("/");
-    String jarName = pathSplit[pathSplit.length - 1];
-    String jarPath = path.replace(jarName, "");
-    String linuxDriverPath = jarPath+"driver/chromedriver";
-    String winDriverPath = jarPath+"driver/chromedriver.exe";
-    String linuxChromePath = jarPath+"driver/google-chrome-stable_current_amd64_71.0.3578.80.deb";
-    System.out.println(linuxDriverPath);
+    String linuxDriverPath = properties.getProperty("linuxDriver");
+    String winDriverPath = properties.getProperty("winDriver");
+    String linuxChromePath = properties.getProperty("linuxChromePath");
+    System.out.println(linuxChromePath);
     ChromeOptions chromeOptions = new ChromeOptions();
     if (osName.toUpperCase().indexOf("WIN") > -1){
       System.setProperty("webdriver.chrome.driver", winDriverPath);
@@ -83,8 +82,9 @@ public class ChromeDownLoad {
     chromeOptions.setExperimentalOption("useAutomationExtension", false);
     chromeOptions.addArguments("--disable-dev-shm-usage");
     chromeOptions.addArguments(userAgent);
-
+    System.out.println("开始获取浏览器对象！");
     ChromeDriver webDriver = new ChromeDriver(chromeOptions);
+    System.out.println("浏览器对象获取成功！");
     Dimension dimension = new Dimension(1, 1);
     webDriver.manage().window().setSize(dimension);
     Point p = new Point(100,0);

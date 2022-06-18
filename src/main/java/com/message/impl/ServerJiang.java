@@ -59,7 +59,7 @@ public class ServerJiang extends MessageNotify {
     List<BasicNameValuePair> params = new ArrayList<>();
     params.add(new BasicNameValuePair("title", title));
     params.add(new BasicNameValuePair("desp", desp));
-    params.add(new BasicNameValuePair("channel", "66|9"));
+//    params.add(new BasicNameValuePair("channel", "66|9"));
     post.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
     try {
       HttpResponse response = client.execute(post);
